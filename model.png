@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.example.demo.model</OriginalElement>
+  <nodes>
+    <node x="190.0" y="631.0">com.example.demo.model.GraphDto</node>
+    <node x="-5.0" y="650.0">com.example.demo.model.Graph</node>
+    <node x="116.74999999999997" y="236.0">com.example.demo.model.Vertex</node>
+    <node x="47.27638888888886" y="0.0">com.example.demo.model.Edge</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.example.demo.model.Graph" target="com.example.demo.model.Vertex">
+      <point x="21.25" y="-59.0" />
+      <point x="106.25" y="595.0" />
+      <point x="137.74999999999997" y="595.0" />
+      <point x="-75.0" y="179.0" />
+    </edge>
+    <edge source="com.example.demo.model.Vertex" target="com.example.demo.model.Edge">
+      <point x="-66.66666666666669" y="-179.0" />
+      <point x="0.0" y="81.0" />
+    </edge>
+    <edge source="com.example.demo.model.Graph" target="com.example.demo.model.Edge">
+      <point x="-63.75" y="-59.0" />
+      <point x="21.25" y="595.0" />
+      <point x="43.820833333333326" y="595.0" />
+      <point x="43.820833333333326" y="182.0" />
+      <point x="66.87638888888885" y="182.0" />
+      <point x="-78.4" y="81.0" />
+    </edge>
+    <edge source="com.example.demo.model.Edge" target="com.example.demo.model.Vertex">
+      <point x="39.19999999999999" y="81.0" />
+      <point x="184.47638888888883" y="192.0" />
+      <point x="212.74999999999997" y="192.0" />
+      <point x="0.0" y="-179.0" />
+    </edge>
+    <edge source="com.example.demo.model.GraphDto" target="com.example.demo.model.Vertex">
+      <point x="42.5" y="-48.0" />
+      <point x="317.5" y="595.0" />
+      <point x="287.75" y="595.0" />
+      <point x="75.0" y="179.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="114.5" y="509.5" />
+  <SelectedNodes>
+    <node>com.example.demo.model.Graph</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

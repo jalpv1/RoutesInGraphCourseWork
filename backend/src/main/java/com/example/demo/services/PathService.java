@@ -8,19 +8,33 @@ import java.util.*;
 
 @Service
 public class PathService {
-    private ArrayList<Vertex> computePaths(Vertex source) {
+    private int getVertex(GraphDto graphDto,Vertex ver){
+        for (int v=0; v< graphDto.getVertices().size();v++ ) {
+
+            if(graphDto.getVertices().get(v).name.equals(ver.name)){
+                return v;
+            }
+
+        }
+        return -2;
+    }
+    private ArrayList<Vertex> computePaths(Vertex source,GraphDto graphDto) {
         source.maxDistance = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
+        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<>();
         ArrayList<Vertex> explored = new ArrayList<>();
         vertexQueue.add(source);
         explored.add(source);
-
         while (!vertexQueue.isEmpty()) {
-
             Vertex u = vertexQueue.poll();
             ArrayList<Edge> neigh = u.adjacencies;
             for (Edge e : neigh) {
-                Vertex v = e.to;
+               Vertex v = e.to;
+                for (Vertex vcur:
+                     graphDto.getVertices()) {
+                    if(vcur.name.equals(e.to.name)){
+                       v = vcur;
+                    }
+                }
                 double distanceThroughU = u.maxDistance + u.value;
                 if (distanceThroughU > v.maxDistance) {
                     vertexQueue.remove(v);
@@ -30,11 +44,7 @@ public class PathService {
                         v.previous = u;
 
                     }
-                    if (u.previous != null && !u.previous.equals(v)) {
-                        System.out.println("h");
-                    }
                     if (!explored.contains(v)) {
-
                         explored.add(v);
                         vertexQueue.add(v);
 
@@ -48,7 +58,7 @@ public class PathService {
   return explored;
     }
 
-    private List<Vertex> getShortestPathTo(Vertex target) {
+    private List<Vertex> getPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous) {
 
@@ -62,16 +72,19 @@ public class PathService {
 
     public List<Vertex> findPathServiceDejkstra(GraphDto graph, int costLimit, int timeLimit) {
         List<List<Vertex>> paths = new ArrayList<>();
+        // computePaths(graph.vertices.get(1) ,graph);
+      // paths.add( getShortestPathTo(graph.vertices.get(2)) );
+
         for (Vertex from :
                 graph.getVertices()) {
-            graph.setVertices( computePaths(from));
+            //graph.setVertices( computePaths(from ,graph));
             System.out.println("From " + from.name);
             for (Vertex to :
                     graph.getVertices()) {
                 if (!from.equals(to)) {
-                    List<Vertex> currentPath = getShortestPathTo(to);
+                    List<Vertex> currentPath = getPathTo(to);
 
-                   if (LimitsService.checkLimits(currentPath, costLimit, timeLimit)) {
+                  if (LimitsService.checkLimits(currentPath, costLimit, timeLimit)) {
                         paths.add(currentPath);
                    }
                 }
@@ -80,6 +93,9 @@ public class PathService {
 
         }
 
+
+
+        boolean f = LimitsService.checkLimits(paths.get(0), 20, 20);
         return findPathWithMaxCost(paths);
 
     }
@@ -101,6 +117,7 @@ public class PathService {
             int cost = calculateValue(path);
             if (cost > maxCost) {
                 maxPath = path;
+                maxCost = cost;
             }
         }
         return maxPath;
@@ -137,11 +154,12 @@ public class PathService {
             }
             List<Edge> successors = state.adjacencies
                     ;
-            Vertex maxVer = findMaxVertex(successors);
-            if (!explored.contains(maxVer)) {
-                frontier.add(maxVer);
+            if(successors != null && !successors.isEmpty()) {
+                Vertex maxVer = findMaxVertex(successors);
+                if (!explored.contains(maxVer)) {
+                    frontier.add(maxVer);
+                }
             }
-
         }
     }
     public  Vertex findMaxVertex(List<Edge> edges){

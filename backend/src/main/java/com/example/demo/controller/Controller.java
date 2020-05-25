@@ -24,22 +24,37 @@ public class Controller {
     InputService inputService;
     @RequestMapping(value = "/dejsktra",method = RequestMethod.POST)
     @ResponseBody
-    public List<Vertex> dejkstraPathController(@RequestBody()  Graph graph ) {
-        GraphDto graphDto = modelsMapper.mapper(graph);
+    public String dejkstraPathController(@RequestBody()  Graph graph ) {
+        GraphDto graphDto = modelsMapper.mapper2(graph);
         List<Vertex> p = pathService.findPathServiceDejkstra(graphDto, 130, 190);
-        return p;
+        return ModelsMapper.pathCreate(p);
     }
     @RequestMapping(value = "/greedy",method = RequestMethod.POST)
 
-    public List<Vertex> greedy(@RequestBody()  Graph graph){
-        GraphDto graphDto = modelsMapper.mapper(graph);
-        List<Vertex> p = pathService.findPathServiceGreedy(graphDto, 130, 190);
+    public String greedy(@RequestBody()  Graph graph){
+        GraphDto graphDto = modelsMapper.mapper2(graph);
+        List<Vertex> p = pathService.findPathServiceGreedy(graphDto, 24, 27);
+        return ModelsMapper.pathCreate(p);
+    }
+    @RequestMapping(value = "/dejsktra/random",method = RequestMethod.GET)
+
+    public  List<Vertex>  randomGenerateDejkstra(){
+        List<Vertex> p = pathService.findPathServiceDejkstra(inputService.generateService(4,4), 130, 190);
         return p;
     }
-    @RequestMapping(value = "/g",method = RequestMethod.GET)
+    @RequestMapping(value = "/greedy/random",method = RequestMethod.GET)
 
-    public GraphDto g(){
+    public  String  randomGenerateGreedy(){
+        GraphDto graphDto = inputService.generateService(6,6);
+        List<Vertex> p = pathService.findPathServiceGreedy(graphDto, 130, 190);
+       System.out.println("PATH  "+p);
 
-        return inputService.generateService(4,4);
+        return  ModelsMapper.pathCreate(p);
+    }
+    @RequestMapping(value = "/f",method = RequestMethod.GET)
+
+    public  GraphDto  randomGenerateDejkstrarr(){
+
+        return inputService.generateService(6,6);
     }
 }
