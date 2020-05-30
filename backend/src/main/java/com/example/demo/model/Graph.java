@@ -5,6 +5,24 @@ import java.util.ArrayList;
 public class Graph {
     public  ArrayList<Vertex> vertices;
     public  ArrayList<Edge> edges;
+    private int costLimit;
+    private int timeLimit;
+
+    public int getCostLimit() {
+        return costLimit;
+    }
+
+    public void setCostLimit(int costLimit) {
+        this.costLimit = costLimit;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
 
     public Graph() {
         edges = new ArrayList<>();

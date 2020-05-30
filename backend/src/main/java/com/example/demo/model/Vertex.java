@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Vertex implements Comparable<Vertex> {
     public  String name;
     public ArrayList<Edge> adjacencies;
-    public double maxDistance = -Double.POSITIVE_INFINITY;
+    public double maxValuePath = -Double.POSITIVE_INFINITY;
     public Vertex previous;
     public int value;
     public int time;
@@ -28,7 +28,7 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     public int compareTo(Vertex other) {
-        return Double.compare(maxDistance, other.maxDistance);
+        return Double.compare(maxValuePath, other.maxValuePath);
     }
 
     @Override
@@ -36,7 +36,10 @@ public class Vertex implements Comparable<Vertex> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vertex vertex = (Vertex) o;
-        return Double.compare(vertex.maxDistance, maxDistance) == 0 &&
+        return Double.compare(vertex.maxValuePath, maxValuePath) == 0 &&
+                value == vertex.value &&
+                time == vertex.time &&
+                cost == vertex.cost &&
                 Objects.equals(name, vertex.name) &&
                 Objects.equals(adjacencies, vertex.adjacencies) &&
                 Objects.equals(previous, vertex.previous);
@@ -44,6 +47,6 @@ public class Vertex implements Comparable<Vertex> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, adjacencies, maxDistance, previous);
+        return Objects.hash(name, adjacencies, maxValuePath, previous, value, time, cost);
     }
 }
