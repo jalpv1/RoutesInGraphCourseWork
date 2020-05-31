@@ -61,7 +61,7 @@ public class InputService {
             while (true) {
                 Vertex from = vertices.get((int) (Math.random() * vertices.size()-1));
                 Vertex to = vertices.get((int) (Math.random() * vertices.size()-1));
-                if (!from.equals(to)) {
+                if (!from.equals(to) && !from.name.equals(to.name)) {
                     Edge edge = new Edge(from,
                             rnd.nextInt(26), rnd.nextInt(26),
                             to);
@@ -100,7 +100,7 @@ public class InputService {
 // String name =getChar();
             // boolean check =checkUnique(names,name);
             //if(!check) {
-            names.add(getChar());
+            names.add(getChar() + getChar());
             //break;
             //  }
 

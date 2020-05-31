@@ -44,7 +44,7 @@ public class ModelsMapper {
                     frontier.add(edge.to);
                 }
                 if (explored.contains(edge.to)) {
-                   System.out.println("expl");
+                //   System.out.println("expl");
                 }
             }
             if(!vertex.adjacencies.isEmpty()) {

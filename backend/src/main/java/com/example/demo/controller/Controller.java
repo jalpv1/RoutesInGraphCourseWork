@@ -29,7 +29,7 @@ public class Controller {
     public Path dejkstraPathController(@RequestBody()  Graph graph ) {
         GraphDto graphDto = modelsMapper.mapper2(graph);
        List<Vertex> p = pathService.findPathServiceDejkstra(graphDto, graph.getCostLimit(), graph.getTimeLimit(),0);
-        return new Path(ModelsMapper.pathCreate(p)+ " "+pathService.countTargetFunction(p));
+        return new Path("Dejkstra modification algorithm "+ModelsMapper.pathCreate(p)+ " Target function "+pathService.countTargetFunction(p));
     }
     @RequestMapping(value = "/greedy",method = RequestMethod.POST)
     @ResponseBody
@@ -37,28 +37,27 @@ public class Controller {
     public Path greedy(@RequestBody()  Graph graph){
         GraphDto graphDto = modelsMapper.mapper2(graph);
         List<Vertex> p = pathService.findPathServiceGreedy(graphDto, graph.getCostLimit(), graph.getTimeLimit(),0);
-        return new Path(ModelsMapper.pathCreate(p)+ " "+pathService.countTargetFunction(p));
+        return new Path("Greedy algorithm "+ModelsMapper.pathCreate(p)+  " Target function "+pathService.countTargetFunction(p));
     }
     @RequestMapping(value = "/dejsktra/random",method = RequestMethod.POST)
     @ResponseBody
 
     public  Path  randomGenerateDejkstra(@RequestParam int v,@RequestParam int e){
 
-        List<Vertex> p = new ArrayList<>();
-       for(int i = 5;i< 20;i=i+1) {
+       List<Vertex> p = new ArrayList<>();
+       for(int i = 5;i< 50;i=i+1) {
             long startTime = System.currentTimeMillis();
 
             GraphDto g = inputService.generateService(i,i);
             System.out.println("----------------------------------");
-           for (Vertex ver: g.vertices) {
+            for (Vertex ver: g.vertices) {
                System.out.println(ver);
-           }
-             p = pathService.findPathServiceDejkstra(g, (int) (Math.random() *100), (int) (Math.random() *100),i);
-           System.out.println("----------------------------------");
+            }
+            p = pathService.findPathServiceDejkstra(g, (int) (Math.random() *100), (int) (Math.random() *100),i);
+            System.out.println("----------------------------------");
 
-      }
-
-        return new Path( ModelsMapper.pathCreate(p));
+       }
+       return new Path( ModelsMapper.pathCreate(p));
     }
     @RequestMapping(value = "/greedy/random",method = RequestMethod.POST)
     @ResponseBody
@@ -88,9 +87,11 @@ public class Controller {
             GraphDto graphDto = InputService.generateService(i, i);
             System.out.println("1 "+1);
 
-            pG = pathService.findPathServiceGreedy(graphDto, (int) (Math.random() *100), (int) (Math.random() *100),i);
-
-            pD = pathService.findPathServiceDejkstra(graphDto, (int) (Math.random() *100), (int) (Math.random() *100),i);
+     //       pG = pathService.findPathServiceGreedy(graphDto, (int) (Math.random() *100), (int) (Math.random() *100),i);
+   pG = pathService.findPathServiceGreedy(graphDto, 0,0,i);
+       //     pD = pathService.findPathServiceDejkstra(graphDto, (int) (Math.random() *100), (int) (Math.random() *100),i);
+            //
+            pD = pathService.findPathServiceDejkstra(graphDto, 0, 0,i);
           System.out.println("Size "+i+ " greedy path "+ModelsMapper.pathCreate(pG) +" dejkstra path "
                   +ModelsMapper.pathCreate(pD) + " diff "+ pathService.diff(pD,pG));
 
