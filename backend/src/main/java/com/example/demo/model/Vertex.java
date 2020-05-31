@@ -23,8 +23,18 @@ public class Vertex implements Comparable<Vertex> {
     public Vertex() {
 
     }
+
+    @Override
     public String toString() {
-        return name;
+        return "Vertex{" +
+                "name='" + name + '\'' +
+                ", adjacencies=" + adjacencies +
+                ", maxValuePath=" + maxValuePath +
+                ", previous=" + previous +
+                ", value=" + value +
+                ", time=" + time +
+                ", cost=" + cost +
+                '}';
     }
 
     public int compareTo(Vertex other) {
@@ -36,17 +46,15 @@ public class Vertex implements Comparable<Vertex> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vertex vertex = (Vertex) o;
-        return Double.compare(vertex.maxValuePath, maxValuePath) == 0 &&
+        return
                 value == vertex.value &&
                 time == vertex.time &&
                 cost == vertex.cost &&
-                Objects.equals(name, vertex.name) &&
-                Objects.equals(adjacencies, vertex.adjacencies) &&
-                Objects.equals(previous, vertex.previous);
+                Objects.equals(name, vertex.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, adjacencies, maxValuePath, previous, value, time, cost);
+        return Objects.hash(name, value, time, cost);
     }
 }

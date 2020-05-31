@@ -9,6 +9,7 @@ import com.example.demo.model.Vertex;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -16,11 +17,18 @@ import java.util.Random;
 
 public class InputService {
     public static GraphDto  generateService(int sizeVertexes, int sizeEdges) {
-        ArrayList<String> names = namesGenerate(sizeVertexes);
+        HashSet<String> names = namesGenerate2(sizeVertexes);
         Graph graph = new Graph();
         ArrayList<Vertex> vertices = (ArrayList<Vertex>) generateVertexes(sizeVertexes, names);
         graph.setVertices(vertices);
-        graph.setEdges((ArrayList<Edge>) generateEdges(sizeEdges, vertices));
+       // graph.setEdges((ArrayList<Edge>) generateEdges(sizeEdges, vertices));
+        while (true) {
+            ArrayList<Edge> edges = (ArrayList<Edge>) generateEdges(sizeEdges, vertices);
+            if(!edges.isEmpty()){
+                graph.setEdges(edges);
+                break;
+            }
+        }
         return ModelsMapper.mapper2(graph);
 
     }
@@ -30,12 +38,15 @@ public class InputService {
       }
 
      */
-    private static List<Vertex> generateVertexes(int size, ArrayList<String> names) {
+
+    private static List<Vertex> generateVertexes(int size, HashSet<String>  names) {
+        List<String> list = new ArrayList<String>(names);
+
         Random rnd = new Random();
         List<Vertex> vertices = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Vertex vertex =
-                    new Vertex(names.get(i), rnd.nextInt(26), rnd.nextInt(26), rnd.nextInt(26));
+                    new Vertex(list.get(i), rnd.nextInt(26), rnd.nextInt(26), rnd.nextInt(26));
            vertices.add(vertex);
             //   vertex.adjacencies = new ArrayList<>();
             //   vertex.adjacencies.add(new Edge(new Vertex(),rnd.nextInt(26),rnd.nextInt(26)));
@@ -57,6 +68,9 @@ public class InputService {
                     edges.add(edge);
                     break;
                 }
+                if(from.equals(to)){
+                    System.out.println("g");
+                }
             }
 
         }
@@ -67,11 +81,41 @@ public class InputService {
     private  static ArrayList<String> namesGenerate(int size) {
         ArrayList<String> names = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            names.add(getChar());
+
+            while (true){
+                String name =getChar();
+                boolean check =checkUnique(names,name);
+                if(!check) {
+                    names.add(getChar());
+                    break;
+                }
+            }
         }
         return names;
     }
+    private  static HashSet<String> namesGenerate2(int size) {
+        HashSet<String>  names = new HashSet<> (size);
 
+        while (names.size() != size) {
+// String name =getChar();
+            // boolean check =checkUnique(names,name);
+            //if(!check) {
+            names.add(getChar());
+            //break;
+            //  }
+
+        }
+        return names;
+    }
+     private static boolean checkUnique(List<String> names, String str){
+         for (String n:names
+              ) {
+             if(n.equals(str)) {
+                 return true;
+             }
+         }
+        return false;
+     }
     private static String getChar() {
         Random rnd = new Random();
         final String s = Character.toString(rnd.nextInt(26) + 'a');

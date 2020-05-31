@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.mapper.ModelsMapper;
 import com.example.demo.model.Edge;
 import com.example.demo.model.GraphDto;
+import com.example.demo.model.Path;
 import com.example.demo.model.Vertex;
 import org.springframework.stereotype.Service;
 
@@ -20,50 +21,6 @@ public class PathService {
         }
         return -2;
     }
-
-    private ArrayList<Vertex> computePaths2(Vertex source, GraphDto graphDto) {
-        source.maxValuePath = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<>();
-        ArrayList<Vertex> explored = new ArrayList<>();
-        vertexQueue.add(source);
-        explored.add(source);
-        while (!vertexQueue.isEmpty()) {
-            Vertex u = vertexQueue.poll();
-            ArrayList<Edge> neigh = u.adjacencies;
-            for (Edge e : neigh) {
-                Vertex v = e.to;
-                for (Vertex vcur :
-                        graphDto.getVertices()) {
-                    if (vcur.name.equals(e.to.name)) {
-                        v = vcur;
-                    }
-                }
-                double distanceThroughU = u.maxValuePath + u.value;
-                if (distanceThroughU > v.maxValuePath) {
-                    vertexQueue.remove(v);
-
-                    v.maxValuePath = distanceThroughU;
-                    if (u.previous != null && !u.previous.equals(v)) {
-                        v.previous = u;
-
-                    }
-                    if (explored.contains(v)) {
-                        System.out.println("");
-                    }
-                    if (!explored.contains(v)) {
-                        explored.add(v);
-                        vertexQueue.add(v);
-
-                    }
-                }
-            }
-        }
-
-        source.previous = null;
-        source.maxValuePath = 0.;
-        return explored;
-    }
-
 
     private List<Vertex> getPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<>();
@@ -83,9 +40,11 @@ public class PathService {
             if (vertex.name.equals(source.name)){
                break;
             }
-            final Vertex v = vertex;
-            if(path.stream().filter(e -> e.name.equals(v.name)).count() > 0)
-                break;
+
+
+            //final Vertex v = vertex;
+            //if(path.stream().filter(e -> e.name.equals(v.name)).count() > 0)
+               // break;
            /*if (path.size()>10000){
                break;
            }
@@ -122,7 +81,7 @@ public class PathService {
 
         //  boolean f = LimitsService.checkLimits(paths.get(0), 20, 20);
         long timeSpent = System.currentTimeMillis() - startTime;
-        // System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд");
+        System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд"+ new Path(ModelsMapper.pathCreate(findPathWithMaxCost(paths)))+ countTargetFunction(findPathWithMaxCost(paths)));
 
         return findPathWithMaxCost(paths);
     }
@@ -192,7 +151,7 @@ public class PathService {
             List<Edge> successors = state.adjacencies;
             if (successors != null && !successors.isEmpty()) {
                 Vertex maxVer = findMaxVertex(successors);
-                if (!explored.contains(maxVer) && !ModelsMapper.mycon(explored,maxVer)) {
+                if (!explored.contains(maxVer)) {
                     frontier.add(maxVer);
                 }
             }
@@ -232,11 +191,13 @@ public class PathService {
         source.maxValuePath = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
         ArrayList<Vertex> explored = new ArrayList<>();
+        HashSet<String> historyOfPrevious = new HashSet<>();
         vertexQueue.add(source);
         explored.add(source);
-
         while (!vertexQueue.isEmpty()) {
             Vertex u = vertexQueue.poll();
+
+            
             // Visit each edge exiting u
             ArrayList<Edge> neigh = u.adjacencies;
             for (Edge e : neigh) {
@@ -249,12 +210,20 @@ public class PathService {
                     boolean check =  v.name.equals(source.name);
                     if (u.previous != null && !u.previous.equals(v) && !check) {
                         //return to source
-                        v.previous = u;
+                        // VERtex can be previous once check history if contains go to next neigh
+                        if(!historyOfPrevious.contains(u.name)) {
+                            historyOfPrevious.add(u.name);
+                            v.previous = u;
+
+
+                        }
+                        if (historyOfPrevious.contains(u.name)){
+                            System.out.println(":");
+                        }
+                        else { continue;}
                     }
-                    if (u.previous != null && !u.previous.equals(v)) {
-                        //    System.out.println("h");
-                    }
-                    if (!explored.contains(v) && !ModelsMapper.mycon(explored,v)) {
+                    //    System.out.println("h");
+                    if (!explored.contains(v)) {
                         explored.add(v);
                         vertexQueue.add(v); }
 

@@ -39,12 +39,17 @@ public class ModelsMapper {
             for (Edge edge : edges) {
                 vertex.adjacencies.add(edge);
 
-                if (!explored.contains(edge.to) && !mycon(explored,edge.to)) {
+                if (!explored.contains(edge.to)) {
                     edge.to.previous = vertex;
                     frontier.add(edge.to);
                 }
+                if (explored.contains(edge.to)) {
+                   System.out.println("expl");
+                }
             }
-            graphDto.vertices.add(vertex);
+            if(!vertex.adjacencies.isEmpty()) {
+                graphDto.vertices.add(vertex);
+            }
         }
     }
 

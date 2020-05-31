@@ -45,12 +45,16 @@ public class Controller {
     public  Path  randomGenerateDejkstra(@RequestParam int v,@RequestParam int e){
 
         List<Vertex> p = new ArrayList<>();
-       for(int i = 3;i< 1000;i=i+1) {
+       for(int i = 5;i< 20;i=i+1) {
             long startTime = System.currentTimeMillis();
 
             GraphDto g = inputService.generateService(i,i);
-
+            System.out.println("----------------------------------");
+           for (Vertex ver: g.vertices) {
+               System.out.println(ver);
+           }
              p = pathService.findPathServiceDejkstra(g, (int) (Math.random() *100), (int) (Math.random() *100),i);
+           System.out.println("----------------------------------");
 
       }
 
