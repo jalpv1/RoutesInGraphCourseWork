@@ -14,16 +14,6 @@ import java.util.List;
 
 @Service
 public class ModelsMapper {
-    public static GraphDto mapper(Graph graph) {
-        GraphDto graphDto = new GraphDto();
-        graphDto.setVertices(graph.getVertices());
-        for (int i = 0; i < graph.getEdges().size(); i++) {
-            graphDto.getVertices().get(i).adjacencies = findEdges(graph, graphDto.getVertices().get(i));
-        }
-        return graphDto;
-
-    }
-
     public static GraphDto mapper2(Graph graph) {
         GraphDto graphDto = new GraphDto();
         LinkedList<Vertex> frontier = new LinkedList<>();
@@ -43,9 +33,7 @@ public class ModelsMapper {
                     edge.to.previous = vertex;
                     frontier.add(edge.to);
                 }
-                if (explored.contains(edge.to)) {
-                //   System.out.println("expl");
-                }
+
             }
             if(!vertex.adjacencies.isEmpty()) {
                 graphDto.vertices.add(vertex);

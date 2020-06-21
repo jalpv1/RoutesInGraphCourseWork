@@ -1,10 +1,6 @@
 package com.example.demo.model;
-
-import org.springframework.stereotype.Component;
-
 public class Edge {
     public  Vertex from;
-    //public final double weight;
     public int time;
     public int cost;
     public  Vertex to;

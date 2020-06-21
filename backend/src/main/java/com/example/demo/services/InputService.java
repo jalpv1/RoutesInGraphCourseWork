@@ -69,7 +69,7 @@ public class InputService {
                     break;
                 }
                 if(from.equals(to)){
-                    System.out.println("g");
+                //    System.out.println("g");
                 }
             }
 

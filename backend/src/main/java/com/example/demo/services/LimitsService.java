@@ -37,10 +37,6 @@ public class LimitsService {
         //Collections.reverse(path);
         for (int i =0; i < path.size();i++) {
             if (i + 1 != path.size()) {
-                Vertex v = path.get(i);
-                Vertex v2 = path.get(i
-                        +1);
-
                 sum = sum+path.get(i).time + getEdge(path.get(i).adjacencies, path.get(i+1)).time;
             }
             else {
@@ -52,8 +48,6 @@ public class LimitsService {
 
     private static boolean checkCost(List<Vertex> path, int costLimit) {
         int sum = 0;
-        //Collections.reverse(path);
-
             for (int i = 0; i < path.size(); i++) {
                 if (i + 1 != path.size()) {
                     sum = sum + path.get(i).cost + getEdge(path.get(i).adjacencies, path.get(i + 1)).cost;

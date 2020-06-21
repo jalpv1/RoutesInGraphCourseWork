@@ -1,30 +1,12 @@
 package com.example.demo.services;
-
-import com.example.demo.mapper.ModelsMapper;
 import com.example.demo.model.Edge;
 import com.example.demo.model.GraphDto;
-import com.example.demo.model.Path;
 import com.example.demo.model.Vertex;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.resource.VersionPathStrategy;
-
 import java.util.*;
 
 @Service
 public class PathService {
-
-
-    private int getVertex(GraphDto graphDto, Vertex ver) {
-        for (int v = 0; v < graphDto.getVertices().size(); v++) {
-
-            if (graphDto.getVertices().get(v).name.equals(ver.name)) {
-                return v;
-            }
-
-        }
-        return -2;
-    }
-
     private List<Vertex> getPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous) {
@@ -61,20 +43,14 @@ public class PathService {
 
     public List<Vertex> findPathServiceDejkstra(GraphDto graph, int costLimit, int timeLimit, int i) {
         long startTime = System.currentTimeMillis();
-
         List<List<Vertex>> paths = new ArrayList<>();
-        // computePaths(graph.vertices.get(1) ,graph);
-        // paths.add( getShortestPathTo(graph.vertices.get(2)) );
-
         for (Vertex from :
                 graph.getVertices()) {
             computePaths(from);
-            //graph.setVertices( computePaths(from ,graph));
             for (Vertex to :
                     graph.getVertices()) {
                 if (!from.equals(to)) {
                     List<Vertex> currentPath = getPathTo(to, from);
-
                     if (LimitsService.checkLimits(currentPath, costLimit, timeLimit)) {
                         paths.add(currentPath);
                     }
@@ -85,21 +61,54 @@ public class PathService {
 
         //  boolean f = LimitsService.checkLimits(paths.get(0), 20, 20);
         long timeSpent = System.currentTimeMillis() - startTime;
-        System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд" + new Path(ModelsMapper.pathCreate(findPathWithMaxCost(paths))) + countTargetFunction(findPathWithMaxCost(paths)));
+      //  System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд" + new Path(ModelsMapper.pathCreate(findPathWithMaxCost(paths))) + countTargetFunction(findPathWithMaxCost(paths)));
 
         return findPathWithMaxCost(paths);
+    }
+    public static void computePaths(Vertex source) {
+        source.previous = null;
+        source.maxValuePath = 0.;
+        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
+        ArrayList<Vertex> explored = new ArrayList<>();
+        HashSet<String> historyOfPrevious = new HashSet<>();
+        vertexQueue.add(source);
+        explored.add(source);
+        while (!vertexQueue.isEmpty()) {
+            Vertex u = vertexQueue.poll();
+            if (!historyOfPrevious.contains(u.name)) {
+                ArrayList<Edge> neigh = u.adjacencies;
+                for (Edge e : neigh) {
+                    Vertex v = e.to;
+                    double distanceThroughU = u.maxValuePath + u.value;
+                    if (distanceThroughU > v.maxValuePath) {
+                        vertexQueue.remove(v);
+                        v.maxValuePath = distanceThroughU;
+                        boolean check = v.name.equals(source.name);
+                        if (u.previous != null && !u.previous.equals(v) && !check) {
+                            historyOfPrevious.add(u.name);
+                            v.previous = u;
+
+                        }
+                         if (!explored.contains(v)) {
+                            explored.add(v);
+                            vertexQueue.add(v);
+                        }
+
+                    }
+                }
+            }
+        }
+        source.previous = null;
+        source.maxValuePath = 0.;
+
     }
 
     public List<Vertex> findPathServiceDejkstraNodes(GraphDto graph, int costLimit, int timeLimit, int i) {
         long startTime = System.currentTimeMillis();
 
         List<List<Vertex>> paths = new ArrayList<>();
-        // computePaths(graph.vertices.get(1) ,graph);
-        // paths.add( getShortestPathTo(graph.vertices.get(2)) );
-
         for (Vertex from :
                 graph.getVertices()) {
-            //graph.setVertices( computePaths(from ,graph));
             for (Vertex to :
                     graph.getVertices()) {
                 if (!from.equals(to)) {
@@ -115,7 +124,7 @@ public class PathService {
 
         //  boolean f = LimitsService.checkLimits(paths.get(0), 20, 20);
         long timeSpent = System.currentTimeMillis() - startTime;
-        System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд" + new Path(ModelsMapper.pathCreate(findPathWithMaxCost(paths))) + countTargetFunction(findPathWithMaxCost(paths)));
+     //   System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд" + new Path(ModelsMapper.pathCreate(findPathWithMaxCost(paths))) + countTargetFunction(findPathWithMaxCost(paths)));
 
         return findPathWithMaxCost(paths);
     }
@@ -130,7 +139,7 @@ public class PathService {
             paths.add(greedy(from, costLimit, timeLimit));
         }
         long timeSpent = System.currentTimeMillis() - startTime;
-        //   System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд");
+         System.out.println(i + " программа выполнялась  " + timeSpent + " миллисекунд");
         return findPathWithMaxCost(paths);
     }
 
@@ -165,7 +174,7 @@ public class PathService {
         int costLimitCur = source.cost;
         int timeLimitCur = source.time;
 
-        Queue<Vertex> frontier = new LinkedList<Vertex>();    // FIFO queue
+        Queue<Vertex> frontier = new LinkedList<Vertex>();
         LinkedList<Vertex> explored = new LinkedList<>();
         frontier.add(source);
         if (timeLimitCur > timeLimit && costLimitCur > costLimit) {
@@ -278,56 +287,7 @@ public class PathService {
         return maxPath;
     }
 
-    public static void computePaths(Vertex source) {
-        source.previous = null;
-        source.maxValuePath = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
-        ArrayList<Vertex> explored = new ArrayList<>();
-        HashSet<String> historyOfPrevious = new HashSet<>();
-        vertexQueue.add(source);
-        explored.add(source);
-        while (!vertexQueue.isEmpty()) {
-            Vertex u = vertexQueue.poll();
 
-            //   if (!historyOfPrevious.contains(u.name)) {
-
-            // Visit each edge exiting u
-            ArrayList<Edge> neigh = u.adjacencies;
-            for (Edge e : neigh) {
-                Vertex v = e.to;
-                double distanceThroughU = u.maxValuePath + u.value;
-                if (distanceThroughU > v.maxValuePath) {
-                    vertexQueue.remove(v);
-                    v.maxValuePath = distanceThroughU;
-                    // explored.add(v);
-                    boolean check = v.name.equals(source.name);
-                    if (u.previous != null && !u.previous.equals(v) && !check) {
-                        //return to source
-                        // VERtex can be previous once check history if contains go to next neigh
-                       // if (!historyOfPrevious.contains(u.name)) {
-                            historyOfPrevious.add(u.name);
-                            v.previous = u;
-                      //  }
-                        if (historyOfPrevious.contains(u.name)) {
-                            ///  System.out.println(":");
-                        } else {
-                            continue;
-                        }
-                    }
-                    //    System.out.println("h");
-                    if (!explored.contains(v)) {
-                        explored.add(v);
-                        vertexQueue.add(v);
-                    }
-
-                }
-            }
-            // }
-        }
-        source.previous = null;
-        source.maxValuePath = 0.;
-
-    }
     public static void computePaths3(Vertex source) {
         source.maxValuePath = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
